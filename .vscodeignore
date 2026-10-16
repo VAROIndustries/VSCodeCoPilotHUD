@@ -1,0 +1,4 @@
+logs/
+fixture.json
+test.js
+.gitignore
