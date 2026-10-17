@@ -2,7 +2,7 @@
   "name": "copilot-hud",
   "displayName": "Copilot HUD",
   "description": "Status bar HUD for GitHub Copilot quota usage: % bars, remaining, reset date, cycle pace.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "varoindustries",
   "repository": { "type": "git", "url": "https://github.com/VAROIndustries/VSCodeCoPilotHUD" },
   "license": "MIT",

@@ -99,7 +99,7 @@ function ring(q, cyc) {
   const tx = (rad) => (60 + Math.cos(tick) * rad).toFixed(1), ty = (rad) => (60 + Math.sin(tick) * rad).toFixed(1);
   return `<svg class="ring" viewBox="0 0 120 120" role="img" aria-label="${esc(q.name)} ${Math.round(q.used)}% used">
     <circle cx="60" cy="60" r="${r}" class="track s${q.slot}"/>
-    <circle cx="60" cy="60" r="${r}" class="fill s${q.slot}" stroke-dasharray="${(q.used / 100 * c).toFixed(1)} ${c.toFixed(1)}" transform="rotate(-90 60 60)"/>
+    ${q.used > 0 ? `<circle cx="60" cy="60" r="${r}" class="fill s${q.slot}" stroke-dasharray="${(q.used / 100 * c).toFixed(1)} ${c.toFixed(1)}" transform="rotate(-90 60 60)"/>` : ''}
     ${tick != null ? `<line x1="${tx(44)}" y1="${ty(44)}" x2="${tx(62)}" y2="${ty(62)}" class="tick"><title>Cycle ${Math.round(cyc.pct)}% elapsed</title></line>` : ''}
     <text x="60" y="60" class="big">${Math.round(q.used)}%</text>
     <text x="60" y="80" class="small">used</text>
@@ -133,7 +133,13 @@ function chart(list, history, cyc, now) {
   // end labels: top-to-bottom, pushed apart so near-equal values don't overlap
   const ly = {};
   let prev = -Infinity;
-  for (const q of [...series].sort((a, b) => b.used - a.used)) prev = ly[q.key] = Math.max(y(q.used) + 4, prev + 14);
+  const order = [...series].sort((a, b) => b.used - a.used);
+  for (const q of order) prev = ly[q.key] = Math.max(y(q.used) + 4, prev + 14);
+  let next = H - B + 4; // then pull the stack up so nothing drops below the x axis
+  for (const q of order.reverse()) {
+    ly[q.key] = Math.min(ly[q.key], next);
+    next = ly[q.key] - 14;
+  }
   const lines = series.map((q) => {
     const pts = [...(history || []).filter((s) => s.u[q.key] != null).map((s) => [s.t, s.u[q.key]]), [now, q.used]];
     const d = pts.map(([t, v]) => `${x(t).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
@@ -165,7 +171,7 @@ function panelHtml({ data, history, now = Date.now(), nonce = '', cspSource = ''
   button:hover{background:var(--vscode-button-hoverBackground)}
   .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:20px}
   .card{border:1px solid var(--vscode-panel-border,#8884);border-radius:8px;padding:14px;text-align:center}
-  .card h3{justify-content:center} .card.off{opacity:.65}
+  .card h3{justify-content:center} .card.off{opacity:.65;display:flex;flex-direction:column;justify-content:center;min-height:120px}
   .ring{width:132px;height:132px;display:block;margin:4px auto}
   .track{fill:none;stroke-width:10;stroke:currentColor;opacity:.16} .fill{fill:none;stroke-width:10;stroke-linecap:round;stroke:currentColor}
   .tick{stroke:var(--vscode-foreground);stroke-width:2;stroke-linecap:round}

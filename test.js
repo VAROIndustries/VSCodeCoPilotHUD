@@ -68,3 +68,11 @@ assert.ok(!html.includes('<img src=x'));
 assert.match(html, /Premium requests/);
 assert.match(html, /<polyline/);
 console.log('ok');
+
+// regression (live screenshot 2026-10-16): 0% rings draw no fill; 0% labels stay above the x axis
+const zero = hud.panelHtml({ data: fx, history: [], now });
+assert.ok(!zero.includes('class="fill'), '0% ring must not draw a round-cap dot');
+const lys = [...zero.matchAll(/y="([\d.]+)" class="lbl"/g)].map((m) => +m[1]);
+assert.ok(lys.every((v) => v <= 198), `labels below axis: ${lys}`);
+assert.ok(lys[0] !== lys[1]);
+console.log('ok regressions');

@@ -20,7 +20,7 @@ cycle       ▰▰▰▰▰▱▱▱▱▱  51%  resets 2026-11-01
 ## Install
 
 1. Download `copilot-hud-*.vsix` from [Releases](https://github.com/VAROIndustries/VSCodeCoPilotHUD/releases).
-2. `code --install-extension copilot-hud-0.1.0.vsix` (or Extensions view → `...` → *Install from VSIX...*).
+2. `code --install-extension copilot-hud-0.1.1.vsix` (or Extensions view → `...` → *Install from VSIX...*).
 3. Reload the window. Sign in to GitHub in VS Code if prompted.
 
 ## How it works
